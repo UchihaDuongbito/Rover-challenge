@@ -1,0 +1,45 @@
+import math
+
+# define constants
+ROOM_RADIUS = 20 # radius of the circular room
+SCAN_DISTANCE = 5 # distance each monkey moves per scan
+BALLOON_POSITION = (15, 10) # example fixed position of the balloon
+
+# monkey class to represent each monkey and its movement
+class Monkey:
+    def __init__(self, name, angle):
+        self.name = name
+        self.angle = angle # starting angle (in degrees)
+        self.x = 0 
+        self.y = 0 # initial position (at the center)
+        self.found_balloon = False
+        
+    def move_and_scan(self):
+        # move the monkey forward and scan for the balloon
+        if not self.found_balloon:
+            # calculate new position and scan for the balloon
+            self.x += SCAN_DISTANCE * round(math.cos(math.radians(self.angle)), 2)
+            self.y += SCAN_DISTANCE * round(math.cos(math.radians(self.angle)), 2)
+            
+            # check if the current position exactly matches the balloon position
+            if (self.x, self.y) == BALLOON_POSITION:
+                self.found_balloon = True
+                print(f"{self.name} found the balloon at ({self.x}, {self.y})!")
+
+# initialize monkeys with different starting angles
+monkey1 = Monkey("Monkey 1", 0)
+monkey2 = Monkey("Monkey 2", 120)
+monkey3 = Monkey("Monkey 3", 240)
+monkeys = [monkey1, monkey2, monkey3]
+
+# start the search
+for step in range(20):  
+    for monkey in monkeys:
+        monkey.move_and_scan()
+        if monkey.found_balloon:
+            print("Balloon found!")
+            break
+    if any(monkey.found_balloon for monkey in monkeys):
+        break
+else:
+    print("Balloon not found!")
